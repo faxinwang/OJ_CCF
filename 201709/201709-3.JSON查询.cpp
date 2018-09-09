@@ -78,7 +78,7 @@ STRING "hello"
 对应输入样例,处理之后就变成了这个样子:
 {firstName:John,lastName:Smith,address:{streetAddress:2ndStreet,city:NewYork,state:NY},esc\aped:"hello"}
 
-使用处理过后的数据构建Json对象
+Json数据结构的定义:
 struct Json
 {
     map<string,string> strDict;
@@ -188,7 +188,6 @@ struct Json
         vector<string> v = split(str.c_str());
         for(int i=0,n=v.size(); i<n; ++i)
         {
-            
             int pos = v[i].find(':');
             string key = v[i].substr(0, pos);
             string value = v[i].substr(pos+1);
@@ -252,9 +251,7 @@ struct Json
         //递归打印对象
          map<string, Json*>::iterator it2 = json->objDict.begin();
          for(; it2!= json->objDict.end(); ++it2 )
-         {
-             cout<<tabs<<it2->first << ":"; print(it2->second, depth+1);
-         }
+            cout<<tabs<<it2->first << ":"; print(it2->second, depth+1);
         cout<<string(depth-1,'\t') << "}" <<endl;
     }
 
@@ -317,7 +314,7 @@ int main()
 
     Json *json = Json::build(jsonStr);
 
-    json->print();
+    // json->print(); //打印出Json对象的结构和内部信息
 
     for(int i=0; i<M; ++i)
     {
