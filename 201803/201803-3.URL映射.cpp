@@ -135,14 +135,8 @@ bool match(vector<string> &fields, vector<string>& rule, vector<string> &param  
             for(int j=0, m=field.size(); j < m; ++j) if(!isdigit(field[j])) return 0; //如果数字参数中出现了其他字符,则不匹配
             param.push_back(field);
         }
-        else if(rule[i] == "<str>")
+        else if(rule[i] == "<str>")//判断"<str>"参数中是否包含非法字符,前面已经判断过了,因此这里不再判断
         {
-            for(int j=0,m=field.size(); j<m; ++j) //判断"<str>"参数中是否包含非法字符,如果包含,则不匹配
-                if( !( isdigit(field[j]) || 
-                       isalpha(field[j]) || 
-                       field[j]== '-' || 
-                       field[j]== '_' ||
-                       field[j]== '.' ) ) return 0;
             param.push_back(field);
         }
         else if(rule[i] == "<path>") //当规则中出现"<path>"时 ,则url中剩下的都是"<path>"的参数
@@ -157,7 +151,7 @@ bool match(vector<string> &fields, vector<string>& rule, vector<string> &param  
             if(rule[i] != field) return 0;
         }
     }
-    return i < cnt ? 0 : 1; //如果规则中没有出现"<path>",则规则和url中字段的个数必须相等
+    return i == cnt; //如果规则中没有出现"<path>",则规则和url中字段的个数必须相等
 }
 
 int main()
@@ -188,7 +182,7 @@ freopen("out.txt","w",stdout);
         parse(fields, url);
 
         bool found = false;
-        for(int j=0; j<n && !found; ++j)
+        for(int j=0; j<n; ++j)
         {
             param.clear();
             if( match(fields, rules[j], param) )
@@ -197,6 +191,7 @@ freopen("out.txt","w",stdout);
                 copy(param.begin(), param.end() ,ostream_iterator<string>(cout," "));
                 printf("\n");
                 found = true;
+                break;
             }
         }
         if(!found) printf("404\n");
